@@ -15,6 +15,25 @@ class App extends Component {
     filter: '',
   };
 
+  componentDidMount() {
+    const contacts = localStorage.getItem('contacts');
+    const parsedContacts = JSON.parse(contacts);
+
+    if (parsedContacts) {
+      this.setState({ contacts: parsedContacts });
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.contacts !== this.state.contacts) {
+      localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
+    }
+  }
+
+  componentWillUnmount() {
+    console.log('unmount');
+  }
+
   formSubmitHandler = data => {
     const allReadyPresentContact = this.state.contacts.some(
       elem => elem.name.toLowerCase() === data.name.toLowerCase(),
@@ -49,6 +68,7 @@ class App extends Component {
   };
 
   render() {
+    console.log('APP componentDidMount');
     const { filter } = this.state;
     const { formSubmitHandler, handleFilterChange, delContact } = this;
     const getContact = this.handleFilterContact();
